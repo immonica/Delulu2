@@ -3,7 +3,6 @@ plugins {
     id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.android")
 }
-
 android {
     namespace = "com.example.todoorganizer"
     compileSdk = 34
@@ -29,8 +28,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-
-
+    kotlinOptions {
+        jvmTarget ="1.8"
+    }
     buildFeatures {
         viewBinding = true
     }
