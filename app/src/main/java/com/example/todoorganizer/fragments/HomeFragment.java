@@ -5,12 +5,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.todoorganizer.R;
 import com.example.todoorganizer.databinding.FragmentHomeBinding;
+import com.example.todoorganizer.fragments.ConfirmLogoutDialogFragment;
 import com.example.todoorganizer.utils.TaskAdapter;
 import com.example.todoorganizer.utils.ToDoData;
 import com.google.android.material.textfield.TextInputEditText;
@@ -40,6 +45,15 @@ public class HomeFragment extends Fragment implements AddTodoPopupFragment.OnDia
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+
+        // Check if the user is authenticated
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            // User is not authenticated, navigate to signinFragment
+            NavController navController = Navigation.findNavController(requireView());
+            navController.navigate(R.id.action_homeFragment_to_signinFragment);
+            return binding.getRoot();  // Make sure to return here to avoid further execution
+        }
+
         return binding.getRoot();
     }
 
@@ -52,6 +66,20 @@ public class HomeFragment extends Fragment implements AddTodoPopupFragment.OnDia
         //get data from firebase
         getTaskFromFirebase();
 
+        Button logoutBtn = binding.getRoot().findViewById(R.id.logoutBtn);
+        NavController navController = Navigation.findNavController(requireView());
+
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show the confirmation dialog
+                showLogoutConfirmationDialog();
+            }
+        });
+
+
+
+
         binding.addTaskBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +91,20 @@ public class HomeFragment extends Fragment implements AddTodoPopupFragment.OnDia
                 frag.show(getChildFragmentManager(), AddTodoPopupFragment.TAG);
             }
         });
+    }
+
+    private void showLogoutConfirmationDialog() {
+        ConfirmLogoutDialogFragment dialogFragment = new ConfirmLogoutDialogFragment();
+        dialogFragment.show(getChildFragmentManager(), "confirmLogoutDialog");
+    }
+
+    public void logoutUser() {
+        // Sign out the user
+        FirebaseAuth.getInstance().signOut();
+
+        // Navigate to signinFragment
+        NavController navController = Navigation.findNavController(requireView());
+        navController.navigate(R.id.action_homeFragment_to_signinFragment);
     }
 
     private void getTaskFromFirebase() {

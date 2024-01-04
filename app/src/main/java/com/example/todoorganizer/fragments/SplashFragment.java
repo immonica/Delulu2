@@ -39,13 +39,13 @@ public class SplashFragment extends Fragment {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-               // if (isLogin) {
-                   // navController.navigate(R.id.action_splashFragment_to_homeFragment);
-                //} else {
-                 //   navController.navigate(R.id.action_splashFragment_to_signinFragment);
-                //}
+                if (isLogin) {
+                    navController.navigate(R.id.action_splashFragment_to_homeFragment);
+                } else {
+                    navController.navigate(R.id.action_splashFragment_to_signinFragment);
+                }
 
-                navController.navigate(R.id.action_splashFragment_to_signinFragment);
+                //navController.navigate(R.id.action_splashFragment_to_signinFragment);
             }
         }, 2000);
     }

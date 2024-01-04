@@ -46,7 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:background="@color/baby_pink"
-                    android:hint="@string/type_your_task"
+                    android:hint="Type your task"
                     android:inputType="textEmailAddress"
                     android:paddingStart="12dp"
                     android:paddingTop="15dp" />
