@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.todoorganizer.R;
 import com.example.todoorganizer.databinding.FragmentHomeBinding;
-import com.example.todoorganizer.fragments.ConfirmLogoutDialogFragment;
 import com.example.todoorganizer.utils.TaskAdapter;
 import com.example.todoorganizer.utils.ToDoData;
 import com.google.android.material.textfield.TextInputEditText;
@@ -76,9 +75,6 @@ public class HomeFragment extends Fragment implements AddTodoPopupFragment.OnDia
                 showLogoutConfirmationDialog();
             }
         });
-
-
-
 
         binding.addTaskBtn.setOnClickListener(new View.OnClickListener() {
             @Override
