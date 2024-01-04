@@ -168,11 +168,23 @@ public class HomeFragment extends Fragment implements AddTodoPopupFragment.OnDia
 
     @Override
     public void onDeleteItemClicked(ToDoData toDoData, int position) {
-        database.child(toDoData.getTaskId()).removeValue().addOnCompleteListener(task -> {
+        // Show the confirmation dialog for deleting the task
+        showDeleteConfirmationDialog(toDoData.getTaskId());
+    }
+
+    private void showDeleteConfirmationDialog(String taskId) {
+        ConfirmDeleteDialogFragment dialogFragment = ConfirmDeleteDialogFragment.newInstance(taskId);
+        dialogFragment.show(getChildFragmentManager(), "confirmDeleteDialog");
+    }
+
+
+    public void deleteTask(String taskId) {
+        // Remove the task from the database
+        database.child(taskId).removeValue().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(getContext(), "Deleted Successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Task Deleted Successfully", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), task.getException().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Failed to delete task", Toast.LENGTH_SHORT).show();
             }
         });
     }
