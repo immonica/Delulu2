@@ -20,6 +20,22 @@
             app:layout_constraintEnd_toEndOf="@+id/cardView1"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/set_due_tv"
+            android:layout_width="140dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="12dp"
+            android:drawableRight="@drawable/baseline_calendar_month_24"
+            android:drawablePadding="8dp"
+            android:text="Set Due Date"
+            android:textColor="@color/burgundy"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView1" />
+
+
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardView1"
             android:layout_width="300dp"
@@ -51,6 +67,8 @@
                     android:paddingStart="12dp"
                     android:paddingTop="15dp" />
             </com.google.android.material.textfield.TextInputLayout>
+
+
 
         </com.google.android.material.card.MaterialCardView>
 
