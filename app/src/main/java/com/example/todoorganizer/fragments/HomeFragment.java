@@ -109,7 +109,11 @@ public class HomeFragment extends Fragment implements AddTodoPopupFragment.OnDia
             public void onDataChange(DataSnapshot snapshot) {
                 toDoItemList.clear();
                 for (DataSnapshot taskSnapshot : snapshot.getChildren()) {
-                    ToDoData todoTask = new ToDoData(taskSnapshot.getKey(), taskSnapshot.getValue().toString());
+                    ToDoData todoTask = new ToDoData(
+                            taskSnapshot.getKey(),
+                            taskSnapshot.child("task").getValue().toString(),
+                            taskSnapshot.child("dueDate").getValue().toString()
+                    );
                     if (todoTask != null) {
                         toDoItemList.add(todoTask);
                     }
@@ -140,8 +144,16 @@ public class HomeFragment extends Fragment implements AddTodoPopupFragment.OnDia
     }
 
     @Override
-    public void saveTask(String todoTask, TextInputEditText todoEdit) {
-        database.push().setValue(todoTask).addOnCompleteListener(task -> {
+    public void saveTask(String todoTask, String dueDate, TextInputEditText todoEdit) {
+        // Get the selected due date from the AddTodoPopupFragment
+        String userInputDueDate = frag.getSelectedDueDate();
+
+        // If the user input is not empty, use it as the due date; otherwise, use an empty string
+        dueDate = !userInputDueDate.isEmpty() ? userInputDueDate : "";
+
+        ToDoData newTask = new ToDoData("", todoTask, dueDate);
+
+        database.push().setValue(newTask).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(getContext(), "Task Added Successfully", Toast.LENGTH_SHORT).show();
                 todoEdit.setText(null);
@@ -152,10 +164,14 @@ public class HomeFragment extends Fragment implements AddTodoPopupFragment.OnDia
         });
     }
 
+
+
     @Override
     public void updateTask(ToDoData toDoData, TextInputEditText todoEdit) {
         HashMap<String, Object> map = new HashMap<>();
-        map.put(toDoData.getTaskId(), toDoData.getTask());
+        map.put(toDoData.getTaskId() + "/task", toDoData.getTask());
+        map.put(toDoData.getTaskId() + "/dueDate", toDoData.getDueDate());
+
         database.updateChildren(map).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(getContext(), "Updated Successfully", Toast.LENGTH_SHORT).show();
@@ -165,6 +181,8 @@ public class HomeFragment extends Fragment implements AddTodoPopupFragment.OnDia
             frag.dismiss();
         });
     }
+
+
 
     @Override
     public void onDeleteItemClicked(ToDoData toDoData, int position) {
@@ -193,8 +211,11 @@ public class HomeFragment extends Fragment implements AddTodoPopupFragment.OnDia
     public void onEditItemClicked(ToDoData toDoData, int position) {
         if (frag != null)
             getChildFragmentManager().beginTransaction().remove(frag).commit();
-        frag = AddTodoPopupFragment.newInstance(toDoData.getTaskId(), toDoData.getTask());
+        frag = AddTodoPopupFragment.newInstance(toDoData);
         frag.setListener(HomeFragment.this);
         frag.show(getChildFragmentManager(), AddTodoPopupFragment.TAG);
     }
+
+
+
 }
