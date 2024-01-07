@@ -109,18 +109,19 @@ public class HomeFragment extends Fragment implements AddTodoPopupFragment.OnDia
             public void onDataChange(DataSnapshot snapshot) {
                 toDoItemList.clear();
                 for (DataSnapshot taskSnapshot : snapshot.getChildren()) {
-                    ToDoData todoTask = new ToDoData(
-                            taskSnapshot.getKey(),
-                            taskSnapshot.child("task").getValue().toString(),
-                            taskSnapshot.child("dueDate").getValue().toString()
-                    );
-                    if (todoTask != null) {
+                    String taskId = taskSnapshot.getKey();
+                    String taskValue = taskSnapshot.child("task").getValue(String.class);
+                    String dueDateValue = taskSnapshot.child("dueDate").getValue(String.class);
+
+                    if (taskId != null && taskValue != null && dueDateValue != null) {
+                        ToDoData todoTask = new ToDoData(taskId, taskValue, dueDateValue);
                         toDoItemList.add(todoTask);
                     }
                 }
                 Log.d(TAG, "onDataChange: " + toDoItemList);
                 taskAdapter.notifyDataSetChanged();
             }
+
 
             @Override
             public void onCancelled(DatabaseError error) {

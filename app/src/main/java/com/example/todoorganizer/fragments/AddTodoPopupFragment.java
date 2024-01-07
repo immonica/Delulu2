@@ -6,9 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 
 import androidx.fragment.app.DialogFragment;
 
+import com.example.todoorganizer.R;
 import com.example.todoorganizer.databinding.FragmentAddTodoPopupBinding;
 import com.example.todoorganizer.utils.ToDoData;
 import com.google.android.material.textfield.TextInputEditText;
@@ -59,11 +61,22 @@ public class AddTodoPopupFragment extends DialogFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Find the "X" button by ID
+        ImageView closeBtn = view.findViewById(R.id.todoClose);
+
+        // Set an OnClickListener for the "X" button
+        closeBtn.setOnClickListener(v -> dismiss());
+
         // Set an OnClickListener for "Set Due Date" TextView
         binding.setDueTv.setOnClickListener(v -> showDatePickerDialog());
 
         if (getArguments() != null) {
-            toDoData = getArguments().getParcelable("toDoData");
+            toDoData = new ToDoData(
+                    getArguments().getString("taskId"),
+                    getArguments().getString("task"),
+                    getArguments().getString("dueDate")
+            );
+
             if (toDoData != null) {
                 binding.todoEt.setText(toDoData.getTask());
                 // Set other UI elements based on toDoData
@@ -82,6 +95,8 @@ public class AddTodoPopupFragment extends DialogFragment {
             }
         });
     }
+
+
 
     private void showDatePickerDialog() {
         // Get the current date
